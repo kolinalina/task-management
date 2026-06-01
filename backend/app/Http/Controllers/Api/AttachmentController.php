@@ -30,4 +30,16 @@ class AttachmentController extends Controller
 
         return response()->json($attachment, 201);
     }
+
+    public function download(TaskAttachment $attachment)
+    {
+        if (!Storage::disk('local')->exists($attachment->file_path)) {
+            return response()->json(['message' => 'File not found'], 404);
+        }
+
+        return Storage::disk('local')->download(
+            $attachment->file_path,
+            $attachment->file_name
+        );
+    }
 }
