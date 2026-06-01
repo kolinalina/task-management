@@ -39,4 +39,20 @@ class TaskController extends Controller
 
         return response()->json($task, 201);
     }
+
+    public function update(Request $request, Task $task)
+    {
+        $data = $request->validate([
+            'title'            => 'nullable|string|max:255',
+            'description'      => 'nullable|string',
+            'status'           => 'nullable|in:todo,in_progress,done',
+            'priority'         => 'nullable|in:low,medium,high',
+            'assigned_user_id' => 'nullable|exists:users,id',
+            'due_date'         => 'nullable|date',
+        ]);
+
+        $task->update($data);
+
+        return response()->json($task);
+    }
 }
