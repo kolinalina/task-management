@@ -42,4 +42,12 @@ class AttachmentController extends Controller
             $attachment->file_name
         );
     }
+
+    public function destroy(TaskAttachment $attachment)
+    {
+        Storage::disk('local')->delete($attachment->file_path);
+        $attachment->delete();
+
+        return response()->json(['message' => 'Attachment deleted']);
+    }
 }
