@@ -23,4 +23,20 @@ class TaskController extends Controller
 
         return response()->json($query->paginate(10));
     }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title'            => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'status'           => 'in:todo,in_progress,done',
+            'priority'         => 'in:low,medium,high',
+            'assigned_user_id' => 'nullable|exists:users,id',
+            'due_date'         => 'nullable|date',
+        ]);
+
+        $task = Task::create([...$data, 'created_by' => Auth::id()]);
+
+        return response()->json($task, 201);
+    }
 }
