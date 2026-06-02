@@ -66,5 +66,29 @@ class FileUploadService
         ];
     }
 
-    
+    private function generateThumbnail(UploadedFile $file, int $taskId, string $fileName): string
+    {
+        $thumbnailName = 'thumb_' . $fileName;
+        $thumbnailPath = "attachments/task_{$taskId}/thumbnails/{$thumbnailName}";
+
+        $image = Image::read($file->getPathname())
+            ->scale(width: 300);
+
+        Storage::disk('local')->put($thumbnailPath, $image->toJpeg());
+
+        return $thumbnailPath;
+    }
+
+    public function simulateVirusScan(string $filePath): string
+    {
+        // scan delay
+        $suspiciousExtensions = ['exe', 'bat', 'sh', 'php'];
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+        if (in_array(strtolower($extension), $suspiciousExtensions)) {
+            return 'infected';
+        }
+
+        return 'clean';
+    }
 }
