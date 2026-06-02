@@ -23,4 +23,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('tasks/{task}/attachments', [AttachmentController::class, 'store']);
     Route::get('attachments/{attachment}/download', [AttachmentController::class, 'download']);
     Route::delete('attachments/{attachment}', [AttachmentController::class, 'destroy']);
+
+    // chunked upload
+    Route::post('tasks/{task}/attachments/chunk', [AttachmentController::class, 'chunk']);
+
+    // bulk and export
+    Route::post('tasks/bulk-update', [TaskBulkController::class, 'bulkUpdate']);
+    Route::post('tasks/export',      [TaskBulkController::class, 'export']);
 });
