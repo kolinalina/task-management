@@ -14,6 +14,11 @@ class AttachmentController extends Controller
 {
     public function __construct(private FileUploadService $uploadService) {}
 
+    public function index(Task $task)
+    {
+        return response()->json($task->attachments);
+    }
+
     public function store(Request $request, Task $task)
     {
         $request->validate([

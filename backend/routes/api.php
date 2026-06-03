@@ -30,4 +30,9 @@ Route::middleware('auth:api')->group(function () {
     // bulk and export
     Route::post('tasks/bulk-update', [TaskBulkController::class, 'bulkUpdate']);
     Route::post('tasks/export',      [TaskBulkController::class, 'export']);
+
+    Route::get('tasks/{task}/comments',    [CommentController::class, 'index']);
+    Route::post('tasks/{task}/comments',   [CommentController::class, 'store']);
+    Route::delete('comments/{comment}',    [CommentController::class, 'destroy']);
+    Route::get('tasks/{task}/attachments', [AttachmentController::class, 'index']);
 });

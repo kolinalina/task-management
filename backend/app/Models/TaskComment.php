@@ -11,4 +11,9 @@ class TaskComment extends Model
         'user_id',
         'comment',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
