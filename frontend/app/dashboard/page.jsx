@@ -266,6 +266,13 @@ export default function Dashboard() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
+                                        onClick={() => router.push(`/tasks/${task.id}`)}
+                                    >
+                                        View
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
                                         onClick={() => deleteTask(task.id)}
                                         className="text-destructive hover:text-destructive ml-2"
                                     >

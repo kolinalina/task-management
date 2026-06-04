@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\AttachmentController;
+use App\Http\Controllers\Api\CommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -19,6 +20,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('tasks', [TaskController::class, 'store']);
     Route::put('tasks/{task}', [TaskController::class, 'update']);
     Route::delete('tasks/{task}', [TaskController::class, 'destroy']);
+    Route::get('tasks/{task}', [TaskController::class, 'show']);
 
     Route::post('tasks/{task}/attachments', [AttachmentController::class, 'store']);
     Route::get('attachments/{attachment}/download', [AttachmentController::class, 'download']);
@@ -27,7 +29,7 @@ Route::middleware('auth:api')->group(function () {
     // chunked upload
     Route::post('tasks/{task}/attachments/chunk', [AttachmentController::class, 'chunk']);
 
-    // bulk and export
+    // bulk and exportwi
     Route::post('tasks/bulk-update', [TaskBulkController::class, 'bulkUpdate']);
     Route::post('tasks/export',      [TaskBulkController::class, 'export']);
 
