@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Task;
+use App\Models\TaskComment;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,14 +11,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskUpdated implements ShouldBroadcast
+class CommentCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Task $task)
+    public function __construct(public TaskComment $comment)
     {
         //
     }
@@ -30,11 +30,11 @@ class TaskUpdated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-       return [new Channel('tasks')];
+        return [new Channel('tasks.' . $this->comment->task_id)];
     }
 
-      function broadcastAs(): string
+    public function broadcastAs(): string
     {
-        return 'task.updated';
+        return 'comment.created';
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\TaskComment;
+use App\Events\CommentCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,6 +26,8 @@ class CommentController extends Controller
             'user_id' => Auth::id(),
             'comment' => $request->comment,
         ]);
+        
+        broadcast(new CommentCreated($comment->load('user')))->toOthers();
 
         return response()->json($comment->load('user'), 201);
     }

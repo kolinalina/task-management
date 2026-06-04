@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\User;
+use App\Events\TaskUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\SendTaskAssignedNotification;
@@ -39,6 +40,8 @@ class TaskController extends Controller
 
         $task = Task::create([...$data, 'created_by' => Auth::id()]);
 
+        broadcast(new TaskUpdated($task))->toOthers();
+
         if ($task->assigned_user_id) {
             $user = User::find($task->assigned_user_id);
             SendTaskAssignedNotification::dispatch($task, $user);
@@ -59,6 +62,8 @@ class TaskController extends Controller
         ]);
 
         $task->update($data);
+
+        broadcast(new TaskUpdated($task))->toOthers();
 
         if ($task->assigned_user_id) {
             $user = User::find($task->assigned_user_id);
