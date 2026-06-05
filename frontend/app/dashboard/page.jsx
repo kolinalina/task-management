@@ -48,9 +48,16 @@ export default function Dashboard() {
     }, [filter]);
 
     useEffect(() => {
+        if (!echo) return;
+
         const channel = echo.channel('tasks');
 
+        // channel.listenToAll((event, data) => {
+        //     console.log('ANY EVENT:', event, data);
+        // });
+
         channel.listen('.task.updated', (e) => {
+            // console.log('task updated:', e);
             fetchTasks();
         });
 

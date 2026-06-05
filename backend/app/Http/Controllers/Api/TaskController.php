@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\SendTaskAssignedNotification;
 
+
 class TaskController extends Controller
 {
     public function index(Request $request)

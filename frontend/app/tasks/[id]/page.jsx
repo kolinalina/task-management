@@ -37,16 +37,13 @@ export default function TaskDetail() {
 
         channel.listen('.comment.created', (e) => {
             // console.log('comment received:', e.comment);
-            setComments(prev => {
-                // Cek apakah comment sudah ada
-                const exists = prev.some(c => c.id === e.comment.id);
-                if (exists) return prev;
-                return [...prev, e.comment];
-            });
-        });
-
-        channel.subscribed(() => {
-            // console.log('subscribed to channel tasks.' + id);
+            // setComments(prev => {
+            //     // Cek apakah comment sudah ada
+            //     const exists = prev.some(c => c.id === e.comment.id);
+            //     if (exists) return prev;
+            //     return [...prev, e.comment];
+            // });
+            fetchComments();
         });
 
         return () => {
@@ -136,8 +133,8 @@ export default function TaskDetail() {
         onDrop,
         maxSize: 52428800,
         accept: {
-            'image/*':       [],
-            'video/*':       [],
+            'image/*': [],
+            'video/*': [],
             'application/pdf': [],
             'application/msword': [],
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
