@@ -23,6 +23,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import echo from '@/lib/echo';
 
 export default function Dashboard() {
     const [tasks, setTasks]       = useState([]);
@@ -45,6 +46,18 @@ export default function Dashboard() {
     useEffect(() => {
         fetchTasks();
     }, [filter]);
+
+    useEffect(() => {
+        const channel = echo.channel('tasks');
+
+        channel.listen('.task.updated', (e) => {
+            fetchTasks();
+        });
+
+        return () => {
+            echo.leaveChannel('tasks');
+        };
+    }, []);
 
     const fetchTasks = async () => {
         try {

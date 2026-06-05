@@ -11,6 +11,7 @@ import {
     Loader2, ArrowLeft, Trash2, Upload,
     FileText, Image, Video, Download, MessageSquare
 } from 'lucide-react';
+import echo from '@/lib/echo';
 
 export default function TaskDetail() {
     const { id }                          = useParams();
@@ -27,6 +28,30 @@ export default function TaskDetail() {
         fetchTask();
         fetchComments();
         fetchAttachments();
+    }, [id]);
+
+    useEffect(() => {
+        if (!echo) return;
+
+        const channel = echo.channel(`tasks.${id}`);
+
+        channel.listen('.comment.created', (e) => {
+            // console.log('comment received:', e.comment);
+            setComments(prev => {
+                // Cek apakah comment sudah ada
+                const exists = prev.some(c => c.id === e.comment.id);
+                if (exists) return prev;
+                return [...prev, e.comment];
+            });
+        });
+
+        channel.subscribed(() => {
+            // console.log('subscribed to channel tasks.' + id);
+        });
+
+        return () => {
+            echo.leaveChannel(`tasks.${id}`);
+        };
     }, [id]);
 
     const fetchTask = async () => {
@@ -58,10 +83,14 @@ export default function TaskDetail() {
         e.preventDefault();
         if (!comment.trim()) return;
         try {
-            await api.post(`/tasks/${id}/comments`, { comment });
+            const res = await api.post(`/tasks/${id}/comments`, { comment });
             toast.success('Comment added!');
             setComment('');
-            fetchComments();
+            setComments(prev => {
+                const exists = prev.some(c => c.id === res.data.id);
+                if (exists) return prev;
+                return [...prev, res.data];
+            });
         } catch {
             toast.error('Failed to add comment');
         }
